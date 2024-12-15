@@ -32,9 +32,9 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="bookmark" element={<Bookmark user={user} />} />
           <Route path="rating" element={<Rating user={user} />} />
-          <Route path="movie/:title" element={<MoviePage />} />
+          <Route path="movie/:movie_Id" element={<MoviePage />} />
           <Route path="searchhistory" element={<SearchHistoryPage user={user} />} />
-          <Route path="actor/:name" element={<ActorPage />} />
+          <Route path="actor/:nconst" element={<ActorPage />} />
           <Route path="*" element={<NotFound />} />
           
         </Route>

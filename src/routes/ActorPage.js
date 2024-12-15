@@ -1,14 +1,27 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import CoplayerPage from "../Components/Cooplayer";
+import { useState, useEffect } from "react";
+import fetchData from "../Components/FetchData";
+import Actor from "../Components/Actor";
 
 const ActorPage = () => {
-  const { name } = useParams();
+  const [Loading, setLoading] = useState(true);
+  const { nconst } = useParams();
+  const [actor, setActor] = useState([]);
+  useEffect(() => {
+    fetchData("api/Actor/" + nconst)
+      .then((data) => {
+        setActor(data);
+        setLoading(false);
+      });
+  }, [nconst]);
 
+  if (Loading) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <div>
-      <h1>Actor {name}</h1>
-      <CoplayerPage actorName={name} />
+      <Actor actor={actor} />
     </div>
   );
 };
