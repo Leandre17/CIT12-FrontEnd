@@ -22,5 +22,4 @@ function Movie({ movie }) {
   );
 }
 
-export { MovieDetails, GetMovieActor };
 export default Movie;

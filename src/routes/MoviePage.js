@@ -1,8 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import fetchData from "../Components/FetchData";
 import SimilarMovies from "../Components/SimilarMovie";
+import { MovieImage } from "../Components/FetchData";
 
 function GetMovieActor({ movie_Id }) {
   const navigate = useNavigate();
@@ -18,9 +19,11 @@ function GetMovieActor({ movie_Id }) {
   return (
     <div>
       {Actors.map((actor) => (
-        <button onClick={() => navigate(`/actor/${actor.nconst}`)}>
-          {actor.primaryname}
-        </button>
+        <span className="actor-card" key={actor.nconst}>
+          <button onClick={() => navigate(`/actor/${actor.nconst}`)}>
+            {actor.primaryname}
+          </button>
+        </span>
       ))}
     </div>
   );
@@ -28,26 +31,32 @@ function GetMovieActor({ movie_Id }) {
 
 function MovieDetails({ movie_Id }) {
   const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetchData(`api/MovieDetails/${movie_Id}`)
-      .then(setMovie)
+      .then((data) => {
+        setMovie(data);
+      })
+      .then(() => setLoading(false))
       .catch(console.error);
   }, [movie_Id]);
 
-  if (!movie) {
+  if (loading) {
     return <div>Loading...</div>;
   }
   return (
     <>
-      <div>
+      <div style={{ float: "left", width: "70%" }}>
         <h1>{movie.primarytitle || movie.originaltitle}</h1>
-        <p>Start Year: {movie.startyear}</p>
-        <p>End Year: {movie.endyear}</p>
-        <p>Genre: {movie.genres}</p>
+        {movie.startyear !== "    " && <p>Start Year: {movie.startyear}</p>}
+        {movie.endyear !== "    " && <p>End Year: {movie.endyear}</p>}
+        {movie.genres && <p>Genre: {movie.genres}</p>}
+        <MovieImage title={movie.primarytitle || movie.originaltitle} />
+        <h2>Actors</h2>
         <GetMovieActor movie_Id={movie_Id} />
       </div>
-      <div>
-        <SimilarMovies movie_Id={movie_Id} />
+      <div style={{ float: "right", width: "30%" }}>
+        <SimilarMovies movie_Title={movie.primarytitle || movie.originaltitle} />
       </div>
     </>
   );

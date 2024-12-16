@@ -25,9 +25,9 @@ const CoplayerPage = ({ actorName }) => {
     <div>
       <h1>Coplayer</h1>
       {Coplayer.map((item) => (
-        <div>
+        <span key={item.nconst}>
           <button onClick={() => navigate(`/actor/${item.nconst}`)}>{item.primaryName}</button>
-        </div>
+        </span>
       ))}
       <Pagination
         page={page}

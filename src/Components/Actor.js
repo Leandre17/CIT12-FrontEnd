@@ -1,5 +1,6 @@
 import React from "react";
 import Cooplayer from "./Cooplayer";
+import { ImageById } from "./FetchData";
 
 function Actor({ actor }) {
   return (
@@ -10,6 +11,7 @@ function Actor({ actor }) {
         <p>Death Year: {actor.deathyear || "Unknown"}</p>
         <p>Primary Profession: {actor.primaryprofession || "Unknown"}</p>
       </div>
+      <ImageById id={actor.nconst} name={actor.primaryname} />
       <Cooplayer actorName={actor.primaryname} />
     </>
   );
