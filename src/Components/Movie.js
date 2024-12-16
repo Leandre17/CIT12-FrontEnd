@@ -29,8 +29,8 @@ function Movie({ movie }) {
   }
   if (movie.movie_Id) {
     return (
-      <div className="movie">
-        <button onClick={() => navigate(`/movie/${movie.movie_Id}`)}>
+      <div>
+        <div className="movie">
           <h3>
             {movie.movie_Title}{" "}
             <span style={{ fontWeight: "normal" }}>
@@ -38,11 +38,12 @@ function Movie({ movie }) {
             </span>
           </h3>
           <img
+            onClick={() => navigate(`/movie/${movie.movie_Id}`)}
             src={movie.poster_path || "https://via.placeholder.com/150"}
             alt={movie.movie_Title || "No poster available"}
             style={{ width: "150px", height: "225px" }}
           />
-        </button>
+        </div>
         <div>
           <button onClick={handleAddBookmark} className="add-bookmark-btn">
             Add Bookmark
