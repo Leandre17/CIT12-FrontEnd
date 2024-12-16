@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import fetchData from "../Components/FetchData";
 import SimilarMovies from "../Components/SimilarMovie";
-import { MovieImage } from "../Components/FetchData";
+import { ImageById } from "../Components/FetchData";
 
 function GetMovieActor({ movie_Id }) {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ function MovieDetails({ movie_Id }) {
         {movie.startyear !== "    " && <p>Start Year: {movie.startyear}</p>}
         {movie.endyear !== "    " && <p>End Year: {movie.endyear}</p>}
         {movie.genres && <p>Genre: {movie.genres}</p>}
-        <MovieImage title={movie.primarytitle || movie.originaltitle} />
+        <ImageById title={movie.primarytitle || movie.originaltitle} id={movie.tconst}/>
         <h2>Actors</h2>
         <GetMovieActor movie_Id={movie_Id} />
       </div>
