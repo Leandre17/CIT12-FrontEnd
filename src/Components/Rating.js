@@ -1,10 +1,15 @@
 import React from "react";
 
-function Rating({ Rating }) {
+function Rating({ rating }) {
   return (
-    <>
-      <p>{Rating}</p>
-    </>
+    <div className="rating-item">
+      <p>
+        <strong>Movie:</strong> {rating.tconst}
+      </p>
+      <p>
+        <strong>Rating:</strong> {rating.rating}
+      </p>
+    </div>
   );
 }
 

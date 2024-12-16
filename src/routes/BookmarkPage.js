@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
 import fetchData from "../Components/FetchData";
-import Bookmark from "../Components/Bookmark";
 
 const BookmarkPage = () => {
   const { user } = useUser(); // Get user from UserContext
@@ -68,8 +67,19 @@ const BookmarkPage = () => {
 
       {/* Check if bookmarks exist */}
       {bookmarks.length > 0 ? (
-        bookmarks.map((bookmark) => (
-          <Bookmark key={bookmark.bookmarkId} Bookmark={bookmark} />
+        bookmarks.map((bookmark, index) => (
+          <div key={bookmark.bookmarkId} style={{ padding: "10px 0" }}>
+            <h3>Item Type: {bookmark.itemType}</h3>
+            <p>
+              <strong>Item ID:</strong> {bookmark.itemId}
+            </p>
+            <p>
+              <strong>Annotation:</strong>{" "}
+              {bookmark.annotation || "No annotation"}
+            </p>
+            {index !== bookmarks.length - 1 && <hr />}{" "}
+            {/* Add a line except for the last bookmark */}
+          </div>
         ))
       ) : (
         <p>No bookmarks available.</p>

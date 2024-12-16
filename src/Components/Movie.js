@@ -1,7 +1,36 @@
 import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useUser } from "../Contexts/UserContext";
+import fetchData from "../Components/FetchData";
 
 function Movie({ movie }) {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const handleAddBookmark = async () => {
+    if (!user || !user.id) {
+      alert("You must be logged in to bookmark a movie.");
+      return;
+    }
+    try {
+      const payload = {
+        userId: user.id,
+        itemType: "movie",
+        itemId: movie.movie_Id, // Ensure this matches the movie's unique ID field
+        annotation: `Bookmark for ${movie.movie_Title}`,
+      };
+      const response = await fetchData(
+        "api/Bookmark/Add",
+        false,
+        "POST",
+        payload
+      );
+      alert(response); // Should display "Bookmark added successfully."
+    } catch (error) {
+      console.error("Failed to add bookmark:", error);
+      alert("Failed to add bookmark. Please try again.");
+    }
+  };
+
   if (!movie || !movie.movie_Title) {
     return <div className="movie-error">Invalid movie data</div>;
   }
@@ -21,6 +50,11 @@ function Movie({ movie }) {
             style={{ width: "150px", height: "225px" }}
           />
         </button>
+        <div>
+        <button onClick={handleAddBookmark} className="add-bookmark-btn">
+          Add Bookmark
+          </button>
+        </div>
       </div>
     );
   }
