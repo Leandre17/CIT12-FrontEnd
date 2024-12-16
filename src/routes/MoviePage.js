@@ -40,6 +40,12 @@ function MovieDetails({ movie_Id }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useUser();
+  const [rating, setRating] = useState(5);
+  const handleRate = async () => {
+    const url = `api/RateDb?userId=${user.id}&movieId=${movie_Id}&rating=${rating}`;
+    const response = await fetchData(url, false, "POST");
+    alert(response);
+  };
   const handleAddBookmark = async () => {
     if (!user || !user.id) {
       alert("You must be logged in to bookmark a movie.");
@@ -84,7 +90,18 @@ function MovieDetails({ movie_Id }) {
           title={movie.primarytitle || movie.originaltitle}
           id={movie.tconst}
         />
+        <br />
         <button onClick={handleAddBookmark}>Add Bookmark</button>
+        <input
+          type="number"
+          min="1"
+          max="10"
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
+        />
+        <button onClick={handleRate} className="add-bookmark-btn">
+          Rate
+        </button>
         <h2>Actors</h2>
         <GetMovieActor movie_Id={movie_Id} />
       </div>

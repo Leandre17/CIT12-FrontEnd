@@ -8,6 +8,19 @@ const RatingPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleDelete = async (ratingId) => {
+    const url = `api/UserRating/${ratingId}`;
+    const response = await fetchData(url, false, "DELETE");
+    if (response === "Rating deleted successfully.") {
+      setRatings((prevRatings) => {
+        const newRatings = prevRatings.filter(
+          (rating) => rating.ratingId !== ratingId
+        );
+        return newRatings;
+      });
+    }
+  };
+
   useEffect(() => {
     const fetchRatings = async () => {
       if (!user || !user.id) {
@@ -49,18 +62,7 @@ const RatingPage = () => {
             <p>
               <strong>Rating:</strong> {rating.rating}/10
             </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(rating.date).toLocaleString("en-GB", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-              })}
-            </p>
+            <button onClick={() => handleDelete(rating.ratingId)}>Delete</button>
             {index !== ratings.length - 1 && <hr />}{" "}
             {/* Add a line except for the last rating */}
           </div>

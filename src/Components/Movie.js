@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import { useUser } from "../Contexts/UserContext";
 import fetchData from "../Components/FetchData";
 
 function Movie({ movie }) {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [rating, setRating] = useState(5);
   const handleAddBookmark = async () => {
     if (!user || !user.id) {
       alert("You must be logged in to bookmark a movie.");
@@ -23,6 +24,11 @@ function Movie({ movie }) {
       console.error("Failed to add bookmark:", error);
       alert("Failed to add bookmark. Please try again.");
     }
+  };
+  const handleRate = async () => {
+    const url = `api/RateDb?userId=${user.id}&movieId=${movie.movie_Id}&rating=${rating}`;
+    const response = await fetchData(url, false, "POST");
+    alert(response);
   };
   if (!movie || !movie.movie_Title) {
     return <div className="movie-error">Invalid movie data</div>;
@@ -47,6 +53,16 @@ function Movie({ movie }) {
         <div>
           <button onClick={handleAddBookmark} className="add-bookmark-btn">
             Add Bookmark
+          </button>
+          <input
+            type="number"
+            min="1"
+            max="10"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+          />
+          <button onClick={handleRate} className="add-bookmark-btn">
+            Rate
           </button>
         </div>
       </div>
