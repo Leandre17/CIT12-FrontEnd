@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import fetchData from "../Components/FetchData";
 import SimilarMovies from "../Components/SimilarMovie";
 import { ImageById } from "../Components/FetchData";
+import { useUser } from "../Contexts/UserContext";
 
 function GetMovieActor({ movie_Id }) {
   const navigate = useNavigate();
@@ -18,10 +19,14 @@ function GetMovieActor({ movie_Id }) {
   }
   return (
     <div>
-      {Actors.filter(actor => actor.nconst).map((actor) => (
+      {Actors.filter((actor) => actor.nconst).map((actor) => (
         <span className="actor-card" key={actor.nconst}>
           <button onClick={() => navigate(`/actor/${actor.nconst}`)}>
-            <ImageById id={actor.nconst} name={actor.primaryname} height="100" />
+            <ImageById
+              id={actor.nconst}
+              name={actor.primaryname}
+              height="100"
+            />
             {actor.primaryname}
           </button>
         </span>
@@ -34,6 +39,25 @@ function MovieDetails({ movie_Id }) {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useUser();
+  const handleAddBookmark = async () => {
+    if (!user || !user.id) {
+      alert("You must be logged in to bookmark a movie.");
+      return;
+    }
+
+    try {
+      const annotation = "Bookmark for " + movie.movie_Title;
+      const url = `api/Bookmark/Add?userId=${user.id}&itemType=m&itemId=${movie.movie_Id}&annotation=${annotation}`;
+
+      const response = await fetchData(url, false, "POST");
+
+      alert(response); // Should display "Bookmark added successfully."
+    } catch (error) {
+      console.error("Failed to add bookmark:", error);
+      alert("Failed to add bookmark. Please try again.");
+    }
+  };
   useEffect(() => {
     fetchData(`api/MovieDetails/${movie_Id}`)
       .then((data) => {
@@ -56,12 +80,18 @@ function MovieDetails({ movie_Id }) {
         {movie.startyear !== "    " && <p>Start Year: {movie.startyear}</p>}
         {movie.endyear !== "    " && <p>End Year: {movie.endyear}</p>}
         {movie.genres && <p>Genre: {movie.genres}</p>}
-        <ImageById title={movie.primarytitle || movie.originaltitle} id={movie.tconst}/>
+        <ImageById
+          title={movie.primarytitle || movie.originaltitle}
+          id={movie.tconst}
+        />
+        <button onClick={handleAddBookmark}>Add Bookmark</button>
         <h2>Actors</h2>
         <GetMovieActor movie_Id={movie_Id} />
       </div>
       <div style={{ float: "right", width: "30%" }}>
-        <SimilarMovies movie_Title={movie.primarytitle || movie.originaltitle} />
+        <SimilarMovies
+          movie_Title={movie.primarytitle || movie.originaltitle}
+        />
       </div>
     </>
   );

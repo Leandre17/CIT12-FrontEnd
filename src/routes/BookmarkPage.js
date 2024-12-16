@@ -9,6 +9,29 @@ const BookmarkPage = () => {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
+  const handleDeleteBookmark = async (bookmarkId) => {
+    try {
+      console.log("Deleting bookmark with ID:", bookmarkId);
+      const response = await fetchData(
+        `api/Bookmark/Delete/${bookmarkId}`,
+        false,
+        "DELETE"
+      );
+      if (response === "Bookmark deleted successfully.") {
+        setBookmarks((prevBookmarks) => {
+          const newBookmarks = prevBookmarks.filter(
+            (bookmark) => bookmark.bookmarkId !== bookmarkId
+          );
+          return newBookmarks;
+        });
+      } else {
+        console.error("Failed to delete bookmark:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting bookmark:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchBookmarks = async () => {
       if (!user || !user.id) {
@@ -58,15 +81,19 @@ const BookmarkPage = () => {
       ) : (
         <div className="bookmarks-container">
           {bookmarks.map((bookmark) => (
-            <Bookmark
-              key={bookmark.bookmarkId}
-              bookmark={{
-                Id: bookmark.bookmarkId,
-                itemType: bookmark.itemType,
-                itemId: bookmark.itemId,
-                annotation: bookmark.annotation,
-              }}
-            />
+            <div key={bookmark.bookmarkId}>
+              <Bookmark
+                bookmark={{
+                  Id: bookmark.bookmarkId,
+                  itemType: bookmark.itemType,
+                  itemId: bookmark.itemId,
+                  annotation: bookmark.annotation,
+                }}
+              />
+              <button onClick={() => handleDeleteBookmark(bookmark.bookmarkId)}>
+                Delete
+              </button>
+            </div>
           ))}
         </div>
       )}
