@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-
 function Movie({ movie }) {
   const navigate = useNavigate();
   if (!movie || !movie.movie_Title) {
@@ -8,7 +7,10 @@ function Movie({ movie }) {
   }
   return (
     <div className="movie">
-      <p>{movie.movie_Title}</p>
+      <h3>
+        {movie.movie_Title}{" "}
+        <span style={{ fontWeight: "normal" }}>({movie.rating || "N/A"})</span>
+      </h3>
       {movie.movie_Id && (
         <button onClick={() => navigate(`/movie/${movie.movie_Id}`)}>
           {movie.movie_Title}
@@ -17,6 +19,7 @@ function Movie({ movie }) {
       <img
         src={movie.poster_path || "https://via.placeholder.com/150"}
         alt={movie.movie_Title}
+        style={{ width: "150px", height: "225px" }}
       />
     </div>
   );

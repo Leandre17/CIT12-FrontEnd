@@ -10,33 +10,35 @@ import NotFound from "./routes/NotFoud";
 import SearchHistoryPage from "./routes/SearchHistoryPage";
 import ActorPage from "./routes/ActorPage";
 import StringSearch from "./Components/StringSearch";
-import Structureearch from "./Components/StructuredSearch";
+import StructureSearch from "./Components/StructuredSearch";
 import ExactSearch from "./Components/ExactSearch";
 import { BrowserRouter, Routes, Route } from "react-router";
+import { useUser } from "./Contexts/UserContext"; // Import UserContext
 
 function App() {
-  const user = {
-    id: 1,
-    islogin: false,
-  };
+  const { user } = useUser(); // Get the logged-in user state
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navbar user={user} />}>
           <Route index element={<Home />} />
-          <Route path="search" element={<Search />} >
+          <Route path="search" element={<Search />}>
             <Route path="string" element={<StringSearch />} />
-            <Route path="structured" element={<Structureearch />} />
+            <Route path="structured" element={<StructureSearch />} />
             <Route path="exact" element={<ExactSearch />} />
           </Route>
           <Route path="login" element={<Login />} />
-          <Route path="bookmark" element={<Bookmark user={user} />} />
-          <Route path="rating" element={<Rating user={user} />} />
+          {user && ( // Show these routes only if user is logged in
+            <>
+              <Route path="bookmark" element={<Bookmark user={user} />} />
+              <Route path="rating" element={<Rating user={user} />} />
+              <Route path="searchhistory" element={<SearchHistoryPage user={user} />} />
+            </>
+          )}
           <Route path="movie/:movie_Id" element={<MoviePage />} />
-          <Route path="searchhistory" element={<SearchHistoryPage user={user} />} />
           <Route path="actor/:nconst" element={<ActorPage />} />
           <Route path="*" element={<NotFound />} />
-          
         </Route>
       </Routes>
     </BrowserRouter>

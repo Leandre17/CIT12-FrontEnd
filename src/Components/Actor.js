@@ -7,9 +7,9 @@ function Actor({ actor }) {
     <>
       <div>
         <h2>Primary Name: {actor.primaryname}</h2>
-        <p>Birth Year: {actor.birthyear || "Unknown"}</p>
-        <p>Death Year: {actor.deathyear || "Unknown"}</p>
-        <p>Primary Profession: {actor.primaryprofession || "Unknown"}</p>
+        {actor.birthyear !== "    " && <p>Birth Year: {actor.birthyear}</p>}
+        {actor.deathyear !== "    " && <p>Death Year: {actor.deathyear}</p>}
+        {actor.primaryprofession && <p>Primary Profession: {actor.primaryprofession}</p>}
       </div>
       <ImageById id={actor.nconst} name={actor.primaryname} />
       <Cooplayer actorName={actor.primaryname} />

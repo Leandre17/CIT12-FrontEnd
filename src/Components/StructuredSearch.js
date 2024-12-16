@@ -25,7 +25,7 @@ const SearchResults = ({ data, isLoading }) => {
   return (
     <div className="search-results">
       {data.map((item) => (
-        <Movie key={item.movie_Id} movie={item} />
+        <Movie key={item.movie_Id} movie_Title={item.movie_Title} />
       ))}
     </div>
   );
