@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import noImage from '../images/no-image.svg';
 
 const TMDB_API_KEY =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzIxMDIxMzFjODI4ZWE1YjdhYWFjYjUwODZjMzIyZiIsIm5iZiI6MTczMTkzMTUwNS43NzMsInN1YiI6IjY3M2IyZDcxZGM0YmJjMDFjNjkxZGY2ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IoVhYqGNMiZPSccZ6Axm9XSd2XCqolLSWAPozi-fpf8";
@@ -78,6 +79,7 @@ const MovieImage = (title) => {
 const ImageById = ({ id, name, height = "300" }) => {
   const [loading, setLoading] = useState(true);
   const [poster, setPoster] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchPoster = async () => {
@@ -93,18 +95,20 @@ const ImageById = ({ id, name, height = "300" }) => {
         );
         const data = poster.data;
         const person = data.person_results[0];
-        if (person) {
+        const movie = data.movie_results[0];
+        if (person && person.profile_path) {
           setPoster(
             `https://image.tmdb.org/t/p/original${person.profile_path}`
           );
-        }
-        const movie = data.movie_results[0];
-        if (movie) {
+        } else if (movie && movie.poster_path) {
           setPoster(`https://image.tmdb.org/t/p/original${movie.poster_path}`);
+        } else {
+          setError("No image available");
         }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching image:", error);
+        setError(error);
         setLoading(false);
       }
     };
@@ -112,7 +116,14 @@ const ImageById = ({ id, name, height = "300" }) => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading image...</div>;
+    return (
+      <div>
+        <img src={noImage} alt="Loading logo" height={height} />
+      </div>
+    );
+  }
+  if (error) {
+    return <img src={noImage} alt="No image available" height={height} />;
   }
   return <img src={poster} alt={name} height={height} />;
 };

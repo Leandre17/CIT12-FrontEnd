@@ -18,9 +18,10 @@ function GetMovieActor({ movie_Id }) {
   }
   return (
     <div>
-      {Actors.map((actor) => (
+      {Actors.filter(actor => actor.nconst).map((actor) => (
         <span className="actor-card" key={actor.nconst}>
           <button onClick={() => navigate(`/actor/${actor.nconst}`)}>
+            <ImageById id={actor.nconst} name={actor.primaryname} height="100" />
             {actor.primaryname}
           </button>
         </span>
