@@ -11,26 +11,19 @@ function Movie({ movie }) {
       alert("You must be logged in to bookmark a movie.");
       return;
     }
+
     try {
-      const payload = {
-        userId: user.id,
-        itemType: "movie",
-        itemId: movie.movie_Id, // Ensure this matches the movie's unique ID field
-        annotation: `Bookmark for ${movie.movie_Title}`,
-      };
-      const response = await fetchData(
-        "api/Bookmark/Add",
-        false,
-        "POST",
-        payload
-      );
+      const annotation = "Bookmark for " + movie.movie_Title;
+      const url = `api/Bookmark/Add?userId=${user.id}&itemType=m&itemId=${movie.movie_Id}&annotation=${annotation}`;
+
+      const response = await fetchData(url, false, "POST");
+
       alert(response); // Should display "Bookmark added successfully."
     } catch (error) {
       console.error("Failed to add bookmark:", error);
       alert("Failed to add bookmark. Please try again.");
     }
   };
-
   if (!movie || !movie.movie_Title) {
     return <div className="movie-error">Invalid movie data</div>;
   }
@@ -51,8 +44,8 @@ function Movie({ movie }) {
           />
         </button>
         <div>
-        <button onClick={handleAddBookmark} className="add-bookmark-btn">
-          Add Bookmark
+          <button onClick={handleAddBookmark} className="add-bookmark-btn">
+            Add Bookmark
           </button>
         </div>
       </div>

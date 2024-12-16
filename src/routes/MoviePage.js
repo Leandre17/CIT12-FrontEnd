@@ -33,17 +33,21 @@ function GetMovieActor({ movie_Id }) {
 function MovieDetails({ movie_Id }) {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   useEffect(() => {
     fetchData(`api/MovieDetails/${movie_Id}`)
       .then((data) => {
         setMovie(data);
       })
       .then(() => setLoading(false))
-      .catch(console.error);
+      .catch(setError);
   }, [movie_Id]);
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
   }
   return (
     <>

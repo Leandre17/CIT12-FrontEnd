@@ -32,12 +32,11 @@ const fetchData = async (title) => {
 
 const FeaturedMovie = () => {
   const [films, setFilms] = useState([
-    { movie_Title: "The Shawshank Redemption", poster_path: null, rating: "N/A" },
-    { movie_Title: "The Godfather", poster_path: null, rating: "N/A" },
-    { movie_Title: "The Dark Knight", poster_path: null, rating: "N/A" },
-    { movie_Title: "The Lord of the Rings: The Return of the King", poster_path: null, rating: "N/A" },
-    { movie_Title: "Pulp Fiction", poster_path: null, rating: "N/A" },
-    { movie_Title: "Schindler's List", poster_path: null, rating: "N/A" },
+    { movie_Title: "The Dark Knight", poster_path: null, rating: "N/A", movie_Id: "tt0468569" },
+    { movie_Title: "The Lord of the Rings: The Return of the King", poster_path: null, rating: "N/A", movie_Id: "tt0167260" },
+    { movie_Title: "Skategoat", poster_path: null, rating: "N/A", movie_Id: "tt12966276" },
+    { movie_Title: "The Expendables", poster_path: null, rating: "N/A", movie_Id: "tt0776723" },
+    { movie_Title: "Harry Potter and the Prisoner of Azkaban", poster_path: null, rating: "N/A", movie_Id: "tt0304141" },
   ]);
 
   useEffect(() => {
