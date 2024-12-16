@@ -1,15 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { NavLink } from "react-router";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { Nav, Navbar, Container } from "react-bootstrap";
-import { useLocation } from "react-router";
-import { useUser } from "../Contexts/UserContext"; // Import UserContext
+import { useUser } from "../Contexts/UserContext";
 
 const NavigationBar = () => {
-  const { user, logout } = useUser(); // Access user state and logout function
-  const location = useLocation();
-  const isLoggedIn = !!user; // Check if user exists
+  const { user, logout } = useUser();
 
   return (
     <>
@@ -20,24 +16,24 @@ const NavigationBar = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav activeKey={location.pathname} variant="underline" className="me-auto">
-              {isLoggedIn ? (
+            <Nav className="me-auto">
+              {user ? (
                 <>
-                  <Nav.Link as={NavLink} eventKey="A3" to="/bookmark">
+                  <Nav.Link as={NavLink} to="/bookmark">
                     Bookmark
                   </Nav.Link>
-                  <Nav.Link as={NavLink} eventKey="A4" to="/rating">
+                  <Nav.Link as={NavLink} to="/rating">
                     Rating
                   </Nav.Link>
-                  <Nav.Link as={NavLink} eventKey="A5" to="/searchhistory">
+                  <Nav.Link as={NavLink} to="/searchhistory">
                     Search History
                   </Nav.Link>
-                  <Nav.Link as={NavLink} eventKey="A6" to="/" onClick={logout}>
+                  <Nav.Link as={NavLink} to="/" onClick={logout}>
                     Logout
                   </Nav.Link>
                 </>
               ) : (
-                <Nav.Link as={NavLink} eventKey="A2" to="/login">
+                <Nav.Link as={NavLink} to="/login">
                   Login
                 </Nav.Link>
               )}
@@ -45,9 +41,9 @@ const NavigationBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Container className="my-2">
-        <Outlet />
-      </Container>
+
+      {/* Important: Render child routes here */}
+      <Outlet />
     </>
   );
 };

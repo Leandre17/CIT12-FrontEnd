@@ -6,34 +6,29 @@ import Login from "./routes/LoginPage";
 import Bookmark from "./routes/BookmarkPage";
 import Rating from "./routes/RatingPage";
 import MoviePage from "./routes/MoviePage";
-import NotFound from "./routes/NotFoud";
-import SearchHistoryPage from "./routes/SearchHistoryPage";
 import ActorPage from "./routes/ActorPage";
-import StringSearch from "./Components/StringSearch";
-import StructureSearch from "./Components/StructuredSearch";
-import ExactSearch from "./Components/ExactSearch";
+import NotFound from "./routes/NotFound";
+import SearchHistoryPage from "./routes/SearchHistoryPage";
 import { BrowserRouter, Routes, Route } from "react-router";
-import { useUser } from "./Contexts/UserContext"; // Import UserContext
+import { useUser } from "./Contexts/UserContext";
 
 function App() {
-  const { user } = useUser(); // Get the logged-in user state
-
+  const { user, loading } = useUser();
+  if (loading) {
+    return <h1>Loading...</h1>; // Fallback UI while loading
+  }
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navbar user={user} />}>
+        <Route path="/" element={<Navbar />}>
           <Route index element={<Home />} />
-          <Route path="search" element={<Search />}>
-            <Route path="string" element={<StringSearch />} />
-            <Route path="structured" element={<StructureSearch />} />
-            <Route path="exact" element={<ExactSearch />} />
-          </Route>
+          <Route path="search" element={<Search />} />
           <Route path="login" element={<Login />} />
-          {user && ( // Show these routes only if user is logged in
+          {user && ( // Protected routes for logged-in users
             <>
-              <Route path="bookmark" element={<Bookmark user={user} />} />
-              <Route path="rating" element={<Rating user={user} />} />
-              <Route path="searchhistory" element={<SearchHistoryPage user={user} />} />
+              <Route path="bookmark" element={<Bookmark />} />
+              <Route path="rating" element={<Rating />} />
+              <Route path="searchhistory" element={<SearchHistoryPage />} />
             </>
           )}
           <Route path="movie/:movie_Id" element={<MoviePage />} />

@@ -1,11 +1,13 @@
 import React from "react";
 
-function Bookmark({ Bookmark }) {
+const Bookmark = ({ Bookmark }) => {
   return (
-    <>
-      <p>{Bookmark.item_id} {Bookmark.annotation}</p>
-    </>
+    <div className="bookmark-item" style={{ margin: "10px 0" }}>
+      <h3>Item ID: {Bookmark.itemId}</h3> {/* Displays the itemId */}
+      <p>Type: {Bookmark.itemType}</p> {/* Displays the itemType */}
+      <p>Note: {Bookmark.annotation}</p> {/* Displays the annotation */}
+    </div>
   );
-}
+};
 
 export default Bookmark;

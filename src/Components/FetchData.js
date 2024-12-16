@@ -1,25 +1,40 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+
 const TMDB_API_KEY =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzIxMDIxMzFjODI4ZWE1YjdhYWFjYjUwODZjMzIyZiIsIm5iZiI6MTczMTkzMTUwNS43NzMsInN1YiI6IjY3M2IyZDcxZGM0YmJjMDFjNjkxZGY2ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IoVhYqGNMiZPSccZ6Axm9XSd2XCqolLSWAPozi-fpf8";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const BACKEND_BASE_URL = "https://localhost:7182"; // Your backend URL
 
-const fetchData = async (url) => {
+const fetchData = async (url, isTMDB = false) => {
   try {
-    const port = process.env.REACT_APP_BACKEND_PORT || 7182;
-    const fullUrl = `https://localhost:${port}/${url}`;
+    if (isTMDB) {
+      // For TMDB API requests
+      const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${TMDB_API_KEY}`,
+        },
+        params: { query: url }, // Treat 'url' as the movie title here
+      });
 
-    const response = await fetch(fullUrl);
-
-    if (!response.ok) {
-      console.log("response", response);
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const movie = response.data.results[0];
+      return movie
+        ? {
+            poster_path: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            rating: movie.vote_average
+              ? parseFloat(movie.vote_average).toFixed(1)
+              : "N/A",
+          }
+        : { poster_path: null, rating: "N/A" };
+    } else {
+      // For your backend API requests
+      const response = await axios.get(`${BACKEND_BASE_URL}/${url}`);
+      return response.data;
     }
-
-    const result = await response.json();
-    return result;
   } catch (error) {
-    console.error("Fetch error:", error);
-    throw error; // Re-throw to allow caller to handle
+    console.error("Fetch data error:", error);
+    throw error; // Rethrow for better error handling
   }
 };
 
@@ -60,7 +75,7 @@ const MovieImage = (title) => {
   return <img src={poster} alt={title} height="300" />;
 };
 
-const ImageById = ({ id, name }) => {
+const ImageById = ({ id, name, height = "300" }) => {
   const [loading, setLoading] = useState(true);
   const [poster, setPoster] = useState(null);
 
@@ -79,7 +94,9 @@ const ImageById = ({ id, name }) => {
         const data = poster.data;
         const person = data.person_results[0];
         if (person) {
-          setPoster(`https://image.tmdb.org/t/p/original${person.profile_path}`);
+          setPoster(
+            `https://image.tmdb.org/t/p/original${person.profile_path}`
+          );
         }
         const movie = data.movie_results[0];
         if (movie) {
@@ -97,7 +114,7 @@ const ImageById = ({ id, name }) => {
   if (loading) {
     return <div>Loading image...</div>;
   }
-  return <img src={poster} alt={name} height="300" />;
+  return <img src={poster} alt={name} height={height} />;
 };
 
 export { fetchTMDBImages, MovieImage, ImageById };

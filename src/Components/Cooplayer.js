@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import fetchData from "./FetchData";
 import { Pagination, handlePreviousPage, handleNextPage } from "./Pagination";
 import { useNavigate } from "react-router-dom";
+import { ImageById } from "./FetchData";
 
 const CoplayerPage = ({ actorName }) => {
   const [Coplayer, setCoplayer] = useState([]);
@@ -26,7 +27,10 @@ const CoplayerPage = ({ actorName }) => {
       <h1>Coplayer</h1>
       {Coplayer.map((item) => (
         <span key={item.nconst}>
-          <button onClick={() => navigate(`/actor/${item.nconst}`)}>{item.primaryName}</button>
+          <button onClick={() => navigate(`/actor/${item.nconst}`)}>
+            <ImageById id={item.nconst} name={item.primaryName} height="100" />
+            {item.primaryName}
+          </button>
         </span>
       ))}
       <Pagination
